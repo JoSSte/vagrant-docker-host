@@ -6,9 +6,6 @@ sudo /etc/init.d/ssh reload
 ### INSTALL APT PACKAGES ###
 export DEBIAN_FRONTEND=noninteractive
 
-#mark openssh-server hold to avoid dialog
-#sudo apt-mark hold openssh-server
-
 sudo apt-get update
 sudo apt-get upgrade -y
 
@@ -31,8 +28,11 @@ sudo systemctl enable containerd.service
 
 # Make docker service listen on TCP port 4243
 sudo sed -i "s/ExecStart.*$/ExecStart=\/usr\/bin\/dockerd -H tcp:\/\/0.0.0.0:4243 -H unix:\/\/\/var\/run\/docker.sock/" /lib/systemd/system/docker.service
+## This is an alternative to the above method
 #sudo echo -e "{\n  \"hosts\": [\"unix:///var/run/docker.sock\", \"tcp://127.0.0.1:4243\"]\n}" > /tmp/daemon.json
 #sudo mv /tmp/daemon.json /etc/docker/daemon.json
+
+# Restart docker service
 sudo systemctl daemon-reload
 sudo service docker restart
 
